@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🌌 IP Generator Cyberpunk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(180deg, #00040d, #120025);
+      color: #00eaff;
+      overflow: hidden;
+    }.bg-layers {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 20% 30%, rgba(255,0,180,0.18), transparent 60%),
+              radial-gradient(circle at 80% 70%, rgba(120,0,255,0.18), transparent 60%),
+              radial-gradient(circle at 50% 90%, rgba(0,200,255,0.12), transparent 70%);
+  filter: blur(20px);
+}
+
+canvas#stars {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+}
+
+.panel {
+  background: rgba(0, 10, 25, 0.55);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 150, 255, 0.25);
+  box-shadow: 0 0 25px rgba(255,0,200,0.35), inset 0 0 18px rgba(120,0,255,0.4);
+  border-radius: 18px;
+  max-width: 520px;
+  margin: 80px auto;
+  padding: 28px;
+}
+
+h3 {
+  text-align: center;
+  color: #00cfff;
+  text-shadow: 0 0 12px #00cfff, 0 0 25px #0077ff;
+  margin-bottom: 30px;
+}
+
+select, button {
+  background: linear-gradient(90deg, #00aaff, #ff00dd);
+  color: #fff;
+  box-shadow: 0 0 20px #ff00dd;
+}
+
+button {
+  background: linear-gradient(90deg, #00aaff, #0055ff);
+  color: #fff;
+  box-shadow: 0 0 18px #0077ff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px #0099ff;
+}
+
+.ip-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 12px;
+  color: #00eaff;
+  font-family: monospace;
+  border: 1px solid rgba(0, 150, 255, 0.4);
+  box-shadow: inset 0 0 12px rgba(0, 100, 200, 0.2);
+}
+
+.ip-block button {
+  width: 70px;
+  margin: 0;
+  padding: 6px;
+  font-size: 12px;
+  background: linear-gradient(90deg, #0099ff, #0033aa);
+  box-shadow: 0 0 10px #0088ff;
+}
+
+.message {
+  text-align: center;
+  font-size: 13px;
+  color: #00eaff;
+  min-height: 18px;
+  margin-top: 10px;
+}
+
+  </style>
+</head>
+<body>
+  <canvas id="stars"></canvas>
+  <div class="bg-layers"></div>  <div class="panel">
+    <h3>⚡ Picko panel ⚡</h3><select id="country">
+  <option value="">-- انتخاب کشور --</option>
+  <option value="185.32|2a03:2880">🇦🇪 امارات [UAE]</option>
+  <option value="5.160|2a06:5880">🇮🇷 ایران [Iran]</option>
+  <option value="3.0|2001:4">🇺🇸 آمریکا [United States]</option>
+  <option value="5.56|2001:df0">🇩🇪 آلمان [Germany]</option>
+</select>
+
+<button onclick="generateIPs()">ساخت کدها</button>
+
+<div class="ip-block">
+  <pre id="ipv4">IPv4</pre>
+  <button onclick="copyToClipboard('ipv4')">کپی</button>
+</div>
+<div class="ip-block">
+  <pre id="ipv6_1">IPv6-1</pre>
+  <button onclick="copyToClipboard('ipv6_1')">کپی</button>
+</div>
+<div class="ip-block">
+  <pre id="ipv6_2">IPv6-2</pre>
+  <button onclick="copyToClipboard('ipv6_2')">کپی</button>
+</div>
+
+<div id="message" class="message"></div>
+
+  </div>  <script>
+    function hex() {
+      return Math.floor(Math.random() * 0xffff).toString(16);
+    }
+
+    function randomOctet() {
+      return Math.floor(Math.random() * 256);
+    }
+
+    function generateIPs() {
+      const select = document.getElementById('country');
+      const val = select.value;
+      const message = document.getElementById('message');
+      message.textContent = '';
+
+      if (!val) {
+        message.style.color = '#ff4d4d';
+        message.textContent = 'لطفاً کشور را انتخاب کنید!';
+        return;
+      }
+
+      const [ipv4Prefix, ipv6Prefix] = val.split('|');
+
+      const ipv4 = `${ipv4Prefix}.${randomOctet()}.${randomOctet()}`;
+      const t2 = `${ipv6Prefix}::${hex()}:${hex()}`;
+      const ipv6_1 = `${t2}:${hex()}:e`;
+      const ipv6_2 = `${t2}:${hex()}:c`;
+
+      document.getElementById('ipv4').textContent = ipv4;
+      document.getElementById('ipv6_1').textContent = ipv6_1;
+      document.getElementById('ipv6_2').textContent = ipv6_2;
+    }
+
+    function copyToClipboard(id) {
+      const text = document.getElementById(id).textContent;
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+
+      const message = document.getElementById('message');
+      message.style.color = '#00eaff';
+      message.textContent = `✅ کپی شد: ${text}`;
+    }
+
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let W, H, stars = [];
+
+    function resize() {
+      W = canvas.width = innerWidth;
+      H = canvas.height = innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function makeStars() {
+      stars = [];
+      for (let i = 0; i < 120; i++) {
+        stars.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 1.5 + 0.5,
+          d: Math.random() * 0.5
+        });
+      }
+    }
+    makeStars();
+
+    function drawStars() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = "#00eaff";
+      for (let s of stars) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+        s.y += s.d;
+        if (s.y > H) {
+          s.y = 0;
+          s.x = Math.random() * W;
+        }
+      }
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
+  </script></body>
+</html>
