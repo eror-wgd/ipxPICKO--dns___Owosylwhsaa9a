@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>پنل WireGuard سایبرپانک</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: url('https://i.postimg.cc/ry3zspLd/40d5b654d20d06435a4713abcfa10c12.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    overflow: hidden; /* جلوگیری از اسکرول کل body */
+  }
+
+  /* کارت شیشه‌ای */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.18);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 400px;
+  }
+
+  input, select, button {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 12px;
+    border: none;
+    font-size: 16px;
+  }
+  button {
+    background: rgba(0, 255, 255, 0.2);
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+  }
+  button:hover {
+    background: rgba(0, 255, 255, 0.5);
+    transform: scale(1.05);
+  }
+
+  textarea {
+    width: 100%;
+    height: 150px;
+    border-radius: 12px;
+    border: none;
+    padding: 10px;
+    resize: none;
+    font-family: monospace;
+  }
+
+  .telegram-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  .telegram-card img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  .telegram-card a {
+    background: rgba(255,0,255,0.2);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+  .telegram-card a:hover {
+    background: rgba(255,0,255,0.5);
+    transform: scale(1.05);
+  }
+
+  #login, #panel-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #panel-container {
+    display: none;
+    overflow-y: auto;
+    padding: 20px 0;
+  }
+
+  @media(max-width: 450px) {
+    .glass-card { max-width: 90%; margin: 15px auto; }
+    .telegram-card img { width: 40px; height: 40px; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login" class="glass-card">
+  <h2>pass </h2>
+  <input type="password" id="password" placeholder="رمز عبور">
+  <button onclick="checkPassword()">ورود</button>
+
+  <div class="telegram-card">
+    <img src="https://i.postimg.cc/2SmWj54v/file-00000000870072439b32aa3a92d4c1cf.png" alt="Telegram Profile">
+    <span>PICKO GAMING</span>
+    <a href="https://t.me/picko_gaming" target="_blank">ورود به کانال</a>
+  </div>
+</div>
+
+<!-- Panel -->
+<div id="panel-container">
+  <div id="panel" class="glass-card">
+    <h2>𝐏𝐈𝐂𝐊𝐎 𝐖𝐆 𝐏𝐚𝐧𝐧𝐞𝐥</h2>
+
+    <div class="telegram-card">
+      <img src="https://i.postimg.cc/2SmWj54v/file-00000000870072439b32aa3a92d4c1cf.png" alt="Telegram Profile">
+      <span>PICKO GAMING</span>
+      <a href="https://t.me/picko_gaming" target="_blank">ورود به کانال</a>
+    </div>
+
+    <label>𝘀𝗲𝗹𝗲𝗰𝘁 𝘀𝗲𝗿𝘃𝗲𝗿</label>
+    <select id="country">
+      <option value="3.0|2001:4">🇺🇸 𝗨𝗻𝗶𝘁𝗲𝗱 𝗦𝘁𝗮𝘁𝗲𝘀</option>
+      <option value="5.56|2001:df0">🇩🇪  𝗚𝗲𝗿𝗺𝗮𝗻𝘆</option>
+      <option value="5.48|2a01:e0a">🇫🇷  𝗙𝗿𝗮𝗻𝗰𝗲</option>
+    </select>
+
+    <input type="text" id="configName" placeholder="𝗖𝗼𝗻𝗳𝗶𝗴 𝗻𝗮𝗺𝗲">
+    <button onclick="generateConfig()">𝗕𝘂𝗶𝗹𝗱 𝗖𝗼𝗻𝗳𝗶𝗴</button>
+
+    <h3>𝗬𝗼𝘂𝗿 𝗖𝗼𝗻𝗳𝗶𝗴 :</h3>
+    <textarea id="wgConfig" readonly></textarea>
+    <button id="downloadConfig">𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱 𝗖𝗼𝗻𝗳𝗶𝗴</button>
+
+    <h3>𝗤𝗥 𝗖𝗼𝗱𝗲</h3>
+    <canvas id="qrcode"></canvas>
+    <button id="downloadQR">𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱 𝗤𝗥 𝗰𝗼𝗱𝗲</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tweetnacl-util/nacl-util.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tweetnacl/nacl-fast.min.js"></script>
+<script>
+function checkPassword() {
+  const pass = document.getElementById('password').value;
+  if(pass === 'picko') {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('panel-container').style.display = 'block';
+  } else {
+    alert('رمز اشتباه شد!');
+  }
+}
+
+function randomIP(prefix) {
+  return prefix + '.' + Math.floor(Math.random()*255) + '.' + Math.floor(Math.random()*255);
+}
+
+function randomIPv6Segment() {
+  return Math.floor(Math.random()*0xffff).toString(16);
+}
+
+function randomIPv6(prefix) {
+  return prefix + '::' + randomIPv6Segment() + ':' + randomIPv6Segment();
+}
+
+function generateConfig() {
+  const countryVal = document.getElementById('country').value.split('|');
+  const ipv4Prefix = countryVal[0];
+  const ipv6Prefix = countryVal[1];
+
+  const configName = document.getElementById('configName').value || 'wg-client';
+
+  const keyPair = nacl.box.keyPair();
+  const privateKey = nacl.util.encodeBase64(keyPair.secretKey);
+  const publicKey = nacl.util.encodeBase64(keyPair.publicKey);
+
+  const ipv4Addr = randomIP(ipv4Prefix) + '/24';
+  const dns = '78.157.42.100,' + randomIP(ipv4Prefix) + ',' + randomIPv6(ipv6Prefix) + ',' + randomIPv6(ipv6Prefix);
+
+  const wgConf = `[Interface]
+Address = ${ipv4Addr}
+DNS = ${dns}
+MTU = 1440
+PrivateKey = ${privateKey}
+ListenPort = 1460
+
+[Peer]
+PublicKey = ${publicKey}
+PersistentKeepalive = 13
+Endpoint = [${ipv6Prefix}::1111]:51820
+AllowedIPs = ${ipv4Prefix}.0.0/18,${ipv6Prefix}::/96
+`;
+
+  document.getElementById('wgConfig').value = wgConf;
+
+  document.getElementById('downloadConfig').onclick = function() {
+    const blob = new Blob([wgConf], {type: "conf/plain"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = configName + '.conf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  QRCode.toCanvas(document.getElementById('qrcode'), wgConf, {width:300});
+  document.getElementById('downloadQR').onclick = function() {
+    const qrCanvas = document.getElementById('qrcode');
+    const link = document.createElement('a');
+    link.href = qrCanvas.toDataURL();
+    link.download = configName + '_QR.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+</script>
+
+</body>
+</html>
